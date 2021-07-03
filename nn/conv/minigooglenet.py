@@ -84,7 +84,7 @@ class MiniGoogLeNet:
             channel_dim = 1
         
         # constructs model architecture
-        inputs = Input(shape=input_shape, name="input layer")
+        inputs = Input(shape=input_shape, name="input_layer")
         x = MiniGoogLeNet.conv_module(inputs, 96, (3, 3), (1, 1), channel_dim, "same")
         x = MiniGoogLeNet.inception_module(x, 32, 32, channel_dim)
         x = MiniGoogLeNet.inception_module(x, 32, 48, channel_dim)

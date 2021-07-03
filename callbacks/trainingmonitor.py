@@ -18,7 +18,7 @@ class TrainingMonitor(BaseLogger):
         self.H = {}
         
         # if a valid path was provided for the json path
-        if self.json_path is not None and os.path.exists(str(self.json_patha)):
+        if self.json_path is not None and os.path.exists(str(self.json_path)):
             
             # load the json values into the history dictionary
             self.H = json.loads(open(self.json_path).read())
