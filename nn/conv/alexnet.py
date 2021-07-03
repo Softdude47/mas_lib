@@ -11,6 +11,15 @@ from tensorflow.keras import backend as K
 class AlexNet:
     @staticmethod
     def build(width, height, depth, classes, reg=0.0002):
+        """Builds AlexNet model
+
+        # Args:
+            `width`: width of input image.
+            `height`: height of input image.
+            `depth`: number of channels in input image.
+            `classes`: number of unique classes of image.
+            `reg`: penalty. Defaults to 0.0002.
+        """
         # initialize the model along with the input shape to be
         # "channels last" and the channels dimension itself
         model = Sequential()

@@ -4,9 +4,17 @@ from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPool2D, Dropout
 from tensorflow.keras.layers import BatchNormalization as BN
 
 
-class VGG16:
+class MiniVGG:
     @staticmethod
     def build(width, height, depth, classes):
+        """Build MiniVGG model
+
+        # Args:
+            `width`: width of the input image
+            `height`: height of the input image
+            `depth`: number of channels in the image
+            `classes`: number of uniques classes.
+        """
         input_shape = (height, width, depth)
         channel_dimension = -1
 

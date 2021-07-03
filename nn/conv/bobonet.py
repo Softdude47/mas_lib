@@ -1,5 +1,6 @@
 import math
 from tensorflow.keras.layers import Dense
+from tensorflow.keras import backend as K
 from tensorflow.keras.layers import Dropout
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.regularizers import l2
@@ -7,7 +8,20 @@ from tensorflow.keras.regularizers import l2
 
 class BoboNet:
     @staticmethod
-    def build(input_shape, classes=2, reg=0.0002):
+    def build(width, height, depth, classes, reg=0.0002):
+        """Builds BoboNet model
+        
+        # Args:
+            `width`: width of the input image
+            `height`: height of the input image
+            `depth`: number of channels in the image
+            `classes`: number of uniques classes.
+            `reg`: regularization. Defaults to 0.0002.
+        """
+        # specify input shape
+        input_shape = (width, height, depth)
+        if K.image_data_format() == "channel_first":
+            input_shape = (depth, width, height)
 
         # A good rule of thumb for assigning number of node in current layer
         # is to take the square root of the previous number of nodes in the
@@ -17,7 +31,7 @@ class BoboNet:
         
         # build model with architecture:
         # input => square-root(prev_node) => square-root(prev_node) => output
-        model = Sequential()
+        model = Sequential(name="BoboNet")
         model.add(Dense(units=unit1, activation="relu", kernel_regularizer=l2(reg), input_shape=input_shape))
         model.add(Dense(units=unit2, activation="relu", kernel_regularizer=l2(reg)))
         model.add(Dropout(0.1))
