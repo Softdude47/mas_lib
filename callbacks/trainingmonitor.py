@@ -29,13 +29,14 @@ class TrainingMonitor(BaseLogger):
                 # trim any entries that are past the starting epoch
                 for k in self.H.keys():
                     self.H[k] = self.H[k][: self.start_at]
+                    self.H[k] = [float(val) for val in self.H[k]]
                     
     def on_epoch_end(self, epoch, logs={}):
         # loops over the logs and update the metrics[loss, accuracy, etc]
         # for the entire training process
         for (k, v) in logs.items():
             l = self.H.get(k, [])
-            l.append(v)
+            l.append(float(v))
             self.H[k] = l
         
         if self.json_path is not None:
@@ -49,11 +50,11 @@ class TrainingMonitor(BaseLogger):
             N = np.arange(0, len(self.H["loss"]))
             plt.style.use("ggplot")
             plt.figure()
-            plt.plot(self.H["loss"], N, label="loss")
-            plt.plot(self.H["accuracy"], N, label="accuracy")
-            plt.plot(self.H["val_loss"], N, label="val_loss")
-            plt.plot(self.H["val_accuracy"], N, label="val_accuracy")
-            plt.title(f"Training Loss and Accuracy [Epoch {len(N)}")
+            plt.plot(N, self.H["loss"], label="loss")
+            plt.plot(N, self.H["accuracy"], label="accuracy")
+            plt.plot(N, self.H["val_loss"], label="val_loss")
+            plt.plot(N, self.H["val_accuracy"], label="val_accuracy")
+            plt.title(f"Training Loss and Accuracy [Epoch {len(N)}]")
             plt.xlabel("Epoch")
             plt.ylabel("Loss/Accuracy")
             plt.legend()
