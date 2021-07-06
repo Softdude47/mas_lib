@@ -145,7 +145,7 @@ class DeeperGoogLeNet:
     def build(width, height, depth, classes, reg=503e-5):
         """Builds DeeperGoogLeNet model
 
-        Args:
+        # Arguments:
             `width`: width of input image.
             `height`: height of input image.
             `depth`: number of channel in input image.

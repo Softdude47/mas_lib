@@ -11,7 +11,7 @@ class BoboNet:
     def build(width, height, depth, classes, reg=0.0002):
         """Builds BoboNet model
         
-        # Args:
+        # Arguments:
             `width`: width of the input image
             `height`: height of the input image
             `depth`: number of channels in the image
@@ -19,9 +19,9 @@ class BoboNet:
             `reg`: regularization. Defaults to 0.0002.
         """
         # specify input shape
-        input_shape = (width, height, depth)
+        input_shape = (height, width, depth)
         if K.image_data_format() == "channel_first":
-            input_shape = (depth, width, height)
+            input_shape = (depth, height, width)
 
         # A good rule of thumb for assigning number of node in current layer
         # is to take the square root of the previous number of nodes in the

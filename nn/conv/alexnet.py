@@ -13,7 +13,7 @@ class AlexNet:
     def build(width, height, depth, classes, reg=0.0002):
         """Builds AlexNet model
 
-        # Args:
+        # Arguments:
             `width`: width of input image.
             `height`: height of input image.
             `depth`: number of channels in input image.

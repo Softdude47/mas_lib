@@ -9,16 +9,16 @@ class ShallowNet:
     def build(width, height, depth, classes):
         """Builds ShallowNet model
 
-        # Args:
+        # Arguments:
             `width`: width of the input image
             `height`: height of the input image
             `depth`: number of channels in the image
             `classes`: number of uniques classes.
         """
         
-        input_shape = (width, height, depth)
+        input_shape = (height, width, depth)
         if K.image_data_format() == "channel_first":
-            input_shape = (depth, width, height)
+            input_shape = (depth, height, width)
             
         # builds model architecture
         model = Sequential(name="shallownet")

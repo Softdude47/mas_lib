@@ -9,7 +9,7 @@ class MiniVGG:
     def build(width, height, depth, classes):
         """Build MiniVGG model
 
-        # Args:
+        # Arguments:
             `width`: width of the input image
             `height`: height of the input image
             `depth`: number of channels in the image

@@ -16,7 +16,7 @@ class MiniGoogLeNet:
     @staticmethod
     def conv_module(x, filters, kernel_size, strides, channel_dim, padding):
         """Defines `CONV => BN => RELU` pattern
-        # Args:
+        # Arguments:
             `x`: Input layer to the function.
             `filters`: The number of filters the `CONV` layer is going to learn.
             `kernel_size`: The size of each of the filter that will be learned.
@@ -39,7 +39,7 @@ class MiniGoogLeNet:
         `(1 x 1)` and `(3 x 3)` respectively.A tensor, which is
         the concatenation of the inputs(the blocks) alongside `channel_dim` axis is returned.
 
-        # Args:
+        # Arguments:
             `x`: Input layer to the function.
             `filters_1x1`: The number of filters the `CONV` layer( of `(1 x 1)` kernel size) is going to learn.
             `filters_3x3`: The number of filters the `CONV` layer( of `(3 x 3)` kernel size) is going to learn.
@@ -56,7 +56,7 @@ class MiniGoogLeNet:
         in block having a kernel size `(3 x 3)`. Both(the block and `MaxPool` layer) having a stride of `(3 x 3)`.
         A tensor, which is the concatenation of the inputs(the block and M) alongside `channel_dim` axis is returned.
 
-        # Args:
+        # Arguments:
             `x`: Input layer the the function.
             `filters`: The number of filters the `CONV` layer is going to learn.
             `channel_dim`: The channel_dimension, which is either derived from 'channel first' or 'channel last' ordering.
@@ -76,11 +76,11 @@ class MiniGoogLeNet:
             `depth`: number of channels in input image
             `classes`: number of classes
         """
-        input_shape = (width, height, depth)
+        input_shape = (height, width, depth)
         channel_dim = -1
         
         if K.image_data_format() == "channel_first":
-            input_shape = (depth, width, height)
+            input_shape = (depth, height, width)
             channel_dim = 1
         
         # constructs model architecture
