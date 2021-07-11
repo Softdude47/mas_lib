@@ -156,7 +156,7 @@ class DeeperGoogLeNet:
         # input shape and channel dimension
         input_shape = (height, width, depth)
         channel_dim = -1
-        if K.img_data_format == "channel_first":
+        if K.image_data_format() == "channel_first":
             channel_dim = 1
         
         # block #1: input layer follow by CONV => POOL => CONV * 2 => POOL
