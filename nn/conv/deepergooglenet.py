@@ -84,7 +84,7 @@ class DeeperGoogLeNet:
         second = DeeperGoogLeNet.conv_module(
             x=x,
             filters=filters_3x3_reducer,
-            kernel_size=(3, 3),
+            kernel_size=(1, 1),
             strides=(1, 1),
             channel_dim=channel_dim,
             padding="same",
@@ -94,6 +94,7 @@ class DeeperGoogLeNet:
         second = DeeperGoogLeNet.conv_module(
             x=second,
             filters=filters_3x3,
+            kernel_size=(3, 3),
             strides=(1, 1),
             channel_dim=channel_dim,
             padding="same",
@@ -106,6 +107,7 @@ class DeeperGoogLeNet:
         third = DeeperGoogLeNet.conv_module(
             x=x,
             filters=filters_5x5_reducer,
+            kernel_size=(1, 1),
             strides=(1, 1),
             channel_dim=channel_dim,
             padding="same",
@@ -115,6 +117,7 @@ class DeeperGoogLeNet:
         third = DeeperGoogLeNet.conv_module(
             x=third,
             filters=filters_5x5,
+            kernel_size=(5, 5),
             strides=(1, 1),
             channel_dim=channel_dim,
             padding="same",
@@ -133,9 +136,10 @@ class DeeperGoogLeNet:
         fourth = DeeperGoogLeNet.conv_module(
             x=fourth,
             filters=pool_proj,
+            kernel_size=(1, 1),
             strides=(1, 1),
             channel_dim=channel_dim,
-            paddin="same",
+            padding="same",
             name=stage+"_fourth2",
             reg=reg
         )
