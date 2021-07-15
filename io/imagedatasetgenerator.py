@@ -48,17 +48,16 @@ class ImageDatasetGenerator(Sequence):
         num_classes = len(self.classes)
         print(f"[INFO] Found {len(self.paths)} images... belonging to {num_classes} classes")
         
-        # store generator steps
-        steps = len(paths) // batch_size
-        self.steps = (steps + 1) if (steps * batch_size) < len(paths) else steps
-        
     def __len__(self):
         """
         Number of batch in the Sequence.
         # Returns:
             The number of batches in the Sequence.
         """
-        return self.steps
+        # store generator steps
+        steps = len(self.paths) // self.batch_size
+        return (steps + 1) if (steps * self.batch_size) < len(self.paths) else steps
+         
        
     def __getitem__(self, index):
         """
@@ -114,7 +113,23 @@ class ImageDatasetGenerator(Sequence):
         label = p.split(os.path.sep)[label_idx]
         return label
     
-    
+    def get_steps(self, subset):
+        """
+        Calculates the number of steps/passes per epoch.
+        # Args:
+            subset: dataset split name.
+            
+        # Returns:
+            Number of steps/passes per epoch.
+        """
+        # get list of path in dataset split
+        paths = self.__get_subset_paths(subset)
+        
+        # store generator steps
+        steps = len(paths) // self.batch_size
+        return (steps + 1) if (steps * self.batch_size) < (paths) else steps
+        
+        
     def generate(self, subset="train", passes=np.inf):
         """
         Generates image and labels.
