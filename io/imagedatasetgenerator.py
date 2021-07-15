@@ -179,10 +179,12 @@ class ImageDatasetGenerator(Sequence):
         # load an image from path
         image = cv2.imread(path)
         image = cv2.resize(image, self.target_size)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         
         # apply preprocessor
         for preprocessor in preprocessors:
-            image = preprocessor.preprocess(image)
+            try:
+                image = preprocessor.preprocess(image)
+            except:
+                image = preprocessor(image)
         
         return image
