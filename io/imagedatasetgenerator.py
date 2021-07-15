@@ -7,7 +7,7 @@ from tensorflow.keras.utils import Sequence
 from sklearn.preprocessing import LabelBinarizer
 
 class ImageDatasetGenerator(Sequence):
-    def __init__(self, paths, batch_size=32, preprocessors=None, aug=None, binarize=True, target_size=(224, 224), validation_split=0.2, **kwargs):
+    def __init__(self, path, batch_size=32, preprocessors=None, aug=None, binarize=True, target_size=(224, 224), validation_split=0.2, **kwargs):
         """Reads image from directory
 
         # Args:
@@ -24,7 +24,7 @@ class ImageDatasetGenerator(Sequence):
         
         # stores values
         self.aug = kwargs.get("aug", aug)
-        self.paths = kwargs.get("paths", paths)
+        self.paths = kwargs.get("paths", path)
         self.binarize = kwargs.get("binarize", binarize)
         self.batch_size = kwargs.get("batch_size", batch_size)
         self.target_size = kwargs.get("target_size", target_size)
