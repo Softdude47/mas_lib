@@ -33,7 +33,7 @@ class ImageDatasetGenerator(Sequence):
         
         # list and shuffle image paths
         # and extract labels
-        paths = list(list_images(paths))
+        paths = list(list_images(path))
         random.shuffle(paths)
         self.paths = paths
         self.num_images = len(paths)
