@@ -127,7 +127,7 @@ class ImageDatasetGenerator(Sequence):
         
         # store generator steps
         steps = len(paths) // self.batch_size
-        return (steps + 1) if (steps * self.batch_size) < (paths) else steps
+        return (steps + 1) if (steps * self.batch_size) < len(paths) else steps
         
         
     def generate(self, subset="train", passes=np.inf):
@@ -153,7 +153,7 @@ class ImageDatasetGenerator(Sequence):
             for (batch_path, batch_labels) in zip(paths, labels):
                 
                 # preprocess each batchs images and labels
-                batch_labels = self.__lb.transform(batch_labels, self.num_images) if self.binarize else batch_labels
+                batch_labels = self.__lb.transform(batch_labels) if self.binarize else batch_labels
                 
                 if "val" in subset:
                     # checks for any preprocessors made for validation image split
@@ -165,7 +165,7 @@ class ImageDatasetGenerator(Sequence):
                 
                 if "train" in subset:
                     # loads image and applies preprocesors(if any)
-                    batch_images = [self.transform(path, self.preprocessors) for path in batch_path]
+                    batch_images = np.array([self.transform(path, self.preprocessors) for path in batch_path])
                     
                     # applies data additional augmentation to loaded images
                     if self.aug is not None:
@@ -175,7 +175,7 @@ class ImageDatasetGenerator(Sequence):
                             batch_images = next(self.aug(batch_images, batch_size=self.batch_size))
                     
                 # returns batch
-                yield (np.array(batch_images), batch_labels)
+                yield (batch_images, batch_labels)
             i += 1
         
         
