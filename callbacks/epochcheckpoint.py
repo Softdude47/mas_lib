@@ -13,22 +13,23 @@ class EpochCheckpoint(BaseLogger):
     def on_epoch_end(self, epoch, logs={}):
         
         # model metrics
-        val_loss = logs.get("val_loss", [])
-        val_acc = logs.get("val_acc", [])
-        loss = logs.get("loss", [])
-        acc = logs.get("acc", [])
+        val_loss = logs.get("val_loss")
+        val_acc = logs.get("val_acc")
+        loss = logs.get("loss")
+        acc = logs.get("acc")
+        
         
         # checkpoint model at given interval
         if epoch % self.interval == 0:
             
             # frees up memory
-            self.clear_recent_checkpoints(self, os.path.dirname(self.path))
+            self.clear_recent_checkpoints(os.path.dirname(self.path))
             
             self.model.save(str(self.path).format(
-                val_loss=val_loss[-1],
-                val_acc = val_acc[-1],
-                loss=loss[-1],
-                acc=acc[-1],
+                val_loss=val_loss,
+                val_acc = val_acc,
+                loss=loss,
+                acc=acc,
                 epoch=epoch,
             ))
             
