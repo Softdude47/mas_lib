@@ -23,6 +23,7 @@ class EpochCheckpoint(BaseLogger):
         if (epoch + 1) % self.interval == 0:
             
             # frees up memory
+            os.makedirs(os.path.dirname(self.path), exist_ok=True)
             self.clear_recent_checkpoints(os.path.dirname(self.path))
             
             self.model.save(str(self.path).format(
