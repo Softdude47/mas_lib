@@ -157,11 +157,11 @@ class ImageDatasetGenerator(Sequence):
                 
                 if "val" in subset:
                     # checks for any preprocessors made for validation image split
-                    val_preprocessors = getattr(self, "val_preprocessors", None)
-                    val_preprocessors = val_preprocessors or getattr(self, "validation_preprocessors", [])
+                    val_preprocessors = getattr(self, "val_preprocessors", [])
+                    val_preprocessors = getattr(self, "validation_preprocessors", val_preprocessors)
                     
                     # loads image and applies preprocesors(if any)
-                    batch_images = [self.transform(path, val_preprocessors) for path in batch_path]
+                    batch_images = np.array([self.transform(path, val_preprocessors) for path in batch_path])
                 
                 if "train" in subset:
                     # loads image and applies preprocesors(if any)
