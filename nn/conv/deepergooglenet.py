@@ -171,12 +171,12 @@ class DeeperGoogLeNet:
         x = DeeperGoogLeNet.conv_module(x, 192, (3, 3), (1, 1), channel_dim, padding="same", name="block3", reg=reg)
         x = MaxPooling2D(pool_size=(3, 3), strides=(2, 2), padding="same", name="pool2")(x)
         
-        # block #2: consists of CONV => CONV => POOL
+        # block #2: consists of two inception module followed by a POOL
         x = DeeperGoogLeNet.inception_module(x, 64, 96, 128, 16, 32, 32, channel_dim, reg=reg, stage="3a")
         x = DeeperGoogLeNet.inception_module(x, 128, 128, 192, 32, 96, 64, channel_dim, reg=reg, stage="3b")
         x = MaxPooling2D(pool_size=(3, 3), strides=(2, 2), padding="same", name="pool3")(x)
         
-        # block #3: consists of (CONV * 4) => (CONV * 4) => (CONV * 4) => (CONV * 4) => (CONV * 4) => POOL
+        # block #3: consists of five inception module followed by a POOL
         x = DeeperGoogLeNet.inception_module(x, 192, 96, 208, 16, 48, 64, channel_dim, reg=reg, stage="4a")
         x = DeeperGoogLeNet.inception_module(x, 160, 112, 224, 24, 64, 64, channel_dim, reg=reg, stage="4b")
         x = DeeperGoogLeNet.inception_module(x, 128, 128, 256, 24, 64, 64, channel_dim, reg=reg, stage="4c")
@@ -190,7 +190,7 @@ class DeeperGoogLeNet:
         
         # SOFTMAX classifier
         x = Flatten(name="flatten")(x)
-        x = Dense(classes, name="labels", kernel_regularizer=reg)(x)
+        x = Dense(classes, name="labels", kernel_regularizer=l2(reg))(x)
         x = Activation(activation="softmax", name="softmax")(x)
         
         # creates model
