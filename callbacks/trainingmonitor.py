@@ -10,7 +10,7 @@ class TrainingMonitor(BaseLogger):
         # the json serialized file and the starting epoch
         super(TrainingMonitor, self).__init__()
         
-        plot_path = kwargs.get("plot_path")
+        plot_path = kwargs.get("plot_path", fig_path)
         self.fig_path = kwargs.get("fig_path", plot_path)
         self.json_path = json_path
         self.start_at = start_at
