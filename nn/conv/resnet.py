@@ -106,9 +106,12 @@ class ResNet:
         # adds the shortcut to the output of the third block
         x = add([shortcut, pre_3])
         
+        # returns the added outputs
+        return x
+        
         
     @staticmethod
-    def build(width, height, depth, classes, stages, filters, reg=0.0001, bn_epsilon=2e-5, bn_momentum=0.9, dataset="cifar"):
+    def build(width, height, depth, classes, stages, filters, reg=0.0001, bn_epsilon=2e-5, bn_momentum=0.9, dataset="cifar10"):
         """Builds ResNet model. Implementation of the paper `Identity Mappings in Deep Residual Networks by He et al`.
 
         # Args:
@@ -160,7 +163,7 @@ class ResNet:
             # applies residual module to learn filters and reduce spatial dimension
             x = ResNet.residual_module(
                 data=x,
-                fitlers=filters[i + 1],
+                filters=filters[i + 1],
                 strides=strides,
                 channel_dim=channel_dim,
                 reduce=True,
@@ -173,7 +176,7 @@ class ResNet:
             for j in range(0, stages[i] - 1):
                 x = ResNet.residual_module(
                     data=x,
-                    fitlers=filters[i + 1],
+                    filters=filters[i + 1],
                     strides=(1, 1),
                     channel_dim=channel_dim,
                     reduce=False,
@@ -189,7 +192,7 @@ class ResNet:
         
         # softmax classifier
         x = Flatten()(x)
-        x = Dense(classes, kernel_regularizer=l2(reg))
+        x = Dense(classes, kernel_regularizer=l2(reg))(x)
         x = Activation("softmax")(x)
         
         # creat the model

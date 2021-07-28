@@ -6,7 +6,10 @@ from keras.callbacks import LambdaCallback
 
 class StepDecay(LambdaCallback):
     def __init__(self, init_lr, factor, drop_every):
+        # initialize base class
+        super(StepDecay, self).__init__()
         
+        # set parameters as class properties
         self.factor = factor
         self.init_lr = init_lr
         self.drop_every = drop_every
