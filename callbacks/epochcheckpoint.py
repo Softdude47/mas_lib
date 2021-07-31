@@ -4,32 +4,36 @@ from pathlib import Path
 from tensorflow.keras.callbacks import BaseLogger
 
 class EpochCheckpoint(BaseLogger):
-    def __init__(self, path, interval):
+    def __init__(self, path, interval, clear_recent=True):
         # initialize base class and store parameters
         super(EpochCheckpoint, self).__init__()
         self.interval = interval
         self.path = path
+        self.clear_recent = clear_recent
         
     def on_epoch_end(self, epoch, logs={}):
         
         # model metrics
-        val_loss = logs.get("val_loss", [])
-        val_acc = logs.get("val_acc", [])
-        loss = logs.get("loss", [])
-        acc = logs.get("acc", [])
+        val_loss = logs.get("val_loss", 0.0)
+        val_acc = logs.get("val_acc", 0.0)
+        loss = logs.get("loss", 0.0)
+        acc = logs.get("acc", 0.0)
+        
         
         # checkpoint model at given interval
-        if epoch % self.interval == 0:
+        if (epoch + 1) % self.interval == 0:
             
             # frees up memory
-            self.clear_recent_checkpoints(self, os.path.dirname(self.path))
+            os.makedirs(os.path.dirname(self.path), exist_ok=True)
+            if self.clear_recent:
+                self.clear_recent_checkpoints(os.path.dirname(self.path))
             
             self.model.save(str(self.path).format(
-                val_loss=val_loss[-1],
-                val_acc = val_acc[-1],
-                loss=loss[-1],
-                acc=acc[-1],
-                epoch=epoch,
+                val_loss=val_loss,
+                val_acc = val_acc,
+                loss=loss,
+                acc=acc,
+                epoch=epoch+1,
             ))
             
     def clear_recent_checkpoints(self, parent_dir):
@@ -39,4 +43,7 @@ class EpochCheckpoint(BaseLogger):
         # delete all recent checkpoints
         for file in recent_checkpoint:
             if file.endswith("h5") or file.endswith("hdf5"):
-                os.remove(file)
+                try:
+                    os.remove(os.path.sep.join([parent_dir, file]))
+                except:
+                    pass

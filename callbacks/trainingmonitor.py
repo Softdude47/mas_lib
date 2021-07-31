@@ -5,13 +5,19 @@ import json
 import os
 
 class TrainingMonitor(BaseLogger):
-    def __init__(self, plot_path, json_path=None, start_at=0):
+    def __init__(self, fig_path=None, json_path=None, start_at=0, **kwargs):
         # store the output path for the plot figures,
         # the json serialized file and the starting epoch
         super(TrainingMonitor, self).__init__()
-        self.plot_path = plot_path
+        
+        plot_path = kwargs.get("plot_path", fig_path)
+        self.fig_path = kwargs.get("fig_path", plot_path)
         self.json_path = json_path
         self.start_at = start_at
+        
+        # creates the directory to each file
+        os.makedirs(os.path.dirname(self.fig_path), exist_ok=True)
+        os.makedirs(os.path.dirname(self.json_path), exist_ok=True)
         
     def on_train_begin(self, logs={}):
         # initialize the history dictionary
@@ -39,7 +45,7 @@ class TrainingMonitor(BaseLogger):
             l.append(float(v))
             self.H[k] = l
         
-        if self.json_path is not None:
+        if self.json_path is not None and self.fig_path is not None:
             f = open(self.json_path, "w")
             f.write(json.dumps(self.H))
             f.close()
@@ -60,5 +66,5 @@ class TrainingMonitor(BaseLogger):
             plt.legend()
             
             # save plot figure
-            plt.savefig(self.plot_path)
+            plt.savefig(self.fig_path)
             plt.close()
