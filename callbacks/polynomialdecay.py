@@ -1,18 +1,12 @@
-import numpy as np
 from tensorflow.keras import backend as K
 from tensorflow.keras.callbacks import Callback
 
 
-
-class StepDecay(Callback):
-    def __init__(self, INIT_LR, factor, drop_every):
-        # initialize base class
-        super(StepDecay, self).__init__()
-        
-        # set parameters as class properties
-        self.factor = factor
+class PolynomialDecay(Callback):
+    def __init__(self, INIT_LR, POWER):
+        super(PolynomialDecay, self).__init__()
         self.INIT_LR = INIT_LR
-        self.drop_every = drop_every
+        self.POWER = POWER
         self.H = {}
         
     def on_epoch_end(self, epoch, logs):
@@ -30,5 +24,5 @@ class StepDecay(Callback):
         
         # perform learning decay
         max_epochs = self.params.get("nb_epoch")
-        current_lr = self.INIT_LR * pow(self.factor, np.floor(1 - ((epoch + 1)/ max_epochs)))
+        current_lr = self.INIT_LR * pow(1 - (epoch/max_epochs), self.POWER)
         K.set_value(self.model.optimizer.learning_rate, current_lr)
