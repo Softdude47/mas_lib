@@ -29,7 +29,8 @@ class ImageDatasetGenerator(Sequence):
         self.batch_size = kwargs.get("batch_size", batch_size)
         self.target_size = kwargs.get("target_size", target_size)
         self.preprocessors = kwargs.get("preprocessors", preprocessors)
-        self.validation_split = kwargs.get("validation_split", validation_split)
+        self.validation_split = getattr(self, "val_split", validation_split)
+        self.validation_split = kwargs.get("validation_split", self.validation_split)
         
         # list and shuffle image paths
         # and extract labels
@@ -48,6 +49,11 @@ class ImageDatasetGenerator(Sequence):
         num_classes = len(self.classes)
         print(f"[INFO] Found {len(self.paths)} images... belonging to {num_classes} classes")
         
+        
+        self.__val_size = int(self.validation_split * self.num_images)
+        print(f"[INFO] {self.num_images - self.__val_size} train images")
+
+
     def __len__(self):
         """
         Number of batch in the Sequence.
@@ -89,13 +95,10 @@ class ImageDatasetGenerator(Sequence):
         """
         if "train" in name:
             # compute number of train image paths
-            split = 1 - self.validation_split
-            split = int(split * len(self.paths))
-            return self.paths[: split]
+            return self.paths[self.__val_size: ]
         
         # compute number of validation image paths
-        split = int(self.validation_split * len(self.paths))
-        return self.paths[split: ]
+        return self.paths[: self.__val_size]
     
     def get_label(self, path):
         """
@@ -170,9 +173,9 @@ class ImageDatasetGenerator(Sequence):
                     # applies data additional augmentation to loaded images
                     if self.aug is not None:
                         try:
-                            batch_images = next(self.aug.flow(batch_images, batch_size=self.batch_size))
+                            (batch_images, batch_labels) = next(self.aug.flow(batch_images, batch_labels, batch_size=self.batch_size))
                         except:
-                            batch_images = next(self.aug(batch_images, batch_size=self.batch_size))
+                            (batch_images, batch_labels) = next(self.aug(batch_images, batch_labels, batch_size=self.batch_size))
                     
                 # returns batch
                 yield (batch_images, batch_labels)

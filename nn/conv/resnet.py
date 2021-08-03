@@ -154,6 +154,20 @@ class ResNet:
                 use_bias=False
             )(x)
             
+        elif dataset == "tiny_imagenet":
+            x = Conv2D(
+                filters=filters[0],
+                kernel_size=(5, 5),
+                strides=(1, 1),
+                padding="same",
+                kernel_regularizer=l2(reg),
+                use_bias=False
+            )(x)
+            x = BatchNormalization(axis=channel_dim, momentum=bn_momentum, epsilon=bn_epsilon)(x)
+            x = Activation("relu")(x)
+            x = ZeroPadding2D((1, 1))(x)
+            x = MaxPooling2D(pool_size=(3, 3), strides=(2, 2))(x)
+            
         # loop over integers in the stages list/tuple
         for i in range(0, len(stages)):
             
