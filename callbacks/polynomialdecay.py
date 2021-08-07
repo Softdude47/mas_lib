@@ -7,22 +7,14 @@ class PolynomialDecay(Callback):
         super(PolynomialDecay, self).__init__()
         self.INIT_LR = INIT_LR
         self.POWER = POWER
-        self.H = {}
         
-    def on_epoch_end(self, epoch, logs):
-        # update metric history
-        for (key, val) in logs.items():
-            existing = self.H.get(key, [])
-            existing.append(float(val))
-            self.H[key] = existing
+    def on_epoch_begin(self, epoch, logs={}):
+        # get total number of epochs
+        max_epochs = self.params.get("nb_epoch") or self.params.get("epochs")
         
-    def on_train_begin(self, logs={}):
-        # get current epoch by adding one to the length
-        # of any key in metrics history(self.H)
-        random_key = list(self.H.keys())[0]
-        epoch = 1 + len(logs[random_key])
-        
-        # perform learning decay
-        max_epochs = self.params.get("nb_epoch")
+        # calculate new learning rate
+        # lr = initial_lr * (1- (current_epoch/total_epochs)) ** 2
         current_lr = self.INIT_LR * pow(1 - (epoch/max_epochs), self.POWER)
+        
+        # apply new learning rate to model
         K.set_value(self.model.optimizer.learning_rate, current_lr)
